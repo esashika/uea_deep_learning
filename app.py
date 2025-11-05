@@ -32,6 +32,23 @@ CLASSES_PEIXES = [
 # (Ajuste conforme necessário. 70% é um bom ponto de partida)
 LIMIAR_CONFIANCA = 0.70
 
+INFO_INSTITUCIONAL = "  \n".join(
+    [
+        "**Universidade do Estado do Amazonas (UEA)**",
+        "**Mestrado em Engenharia Elétrica**",
+        "**Disciplina:** Deep Learning",
+        "**Professor:** Dr. Tiago Melo",
+    ]
+)
+
+ALUNOS = [
+    "Chrystian Caldas",
+    "Edward Junior",
+    "Fabio Braz",
+    "Isabella Cabral",
+    "Rhedson Esashika",
+]
+
 # --- Funções ---
 
 @st.cache_resource
@@ -74,7 +91,17 @@ def preprocessar_imagem(image_pil):
 
 def main():
     st.set_page_config(page_title="Classificador de Peixes", layout="centered")
+    st.sidebar.title("Sobre o Projeto")
+    st.sidebar.markdown(INFO_INSTITUCIONAL)
+    st.sidebar.markdown("")
+    st.sidebar.markdown("**Alunos**")
+    st.sidebar.markdown("\n".join(f"- {aluno}" for aluno in ALUNOS))
+
     st.title("🐟 Classificador de Espécies de Peixes")
+    st.caption(
+        "Aplicação desenvolvida para um trabalho da disciplina de Deep Learning "
+        "do mestrado em Engenharia Elétrica da UEA."
+    )
     
     # Carrega o modelo
     model = carregar_modelo()
