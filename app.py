@@ -4,7 +4,6 @@ from tensorflow.keras.models import load_model
 from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
 import numpy as np
 from PIL import Image
-import io
 import pandas as pd
 
 # --- Constantes da Aplicação ---
@@ -92,18 +91,18 @@ def main():
         try:
             # 1. Ler e exibir a imagem
             image = Image.open(uploaded_file)
-            st.image(image, caption='Imagem Carregada', use_column_width=True)
+            st.image(image, caption='Imagem Carregada', use_container_width=True)
             
             # 2. Pré-processar a imagem
             processed_image = preprocessar_imagem(image)
             
             # 3. Fazer a predição
             with st.spinner('Classificando...'):
-                prediction = model.predict(processed_image)
+                prediction_scores = model.predict(processed_image, verbose=0)[0]
             
             # 4. Obter a confiança e a classe predita
-            confidence = np.max(prediction)
-            predicted_class_index = np.argmax(prediction)
+            confidence = float(np.max(prediction_scores))
+            predicted_class_index = int(np.argmax(prediction_scores))
             predicted_class_name = CLASSES_PEIXES[predicted_class_index]
             
             st.markdown("---")
@@ -119,7 +118,13 @@ def main():
 
             # Opcional: Mostrar detalhes das probabilidades
             with st.expander("Ver todas as probabilidades"):
-                prob_df = pd.DataFrame(prediction.T, index=CLASSES_PEIXES, columns=["Probabilidade"])
+                prob_df = (
+                    pd.DataFrame(
+                        {"Probabilidade": prediction_scores},
+                        index=CLASSES_PEIXES,
+                    )
+                    .sort_values("Probabilidade", ascending=False)
+                )
                 st.dataframe(prob_df.style.format("{:.2%}"))
 
         except Exception as e:
