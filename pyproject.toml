@@ -10,4 +10,8 @@ dependencies = [
     "numpy",
     "Pillow",
     "pandas",
+    "requests>=2.32.5",
+    "beautifulsoup4>=4.14.2",
+    "selenium>=4.38.0",
+    "webdriver-manager>=4.0.2",
 ]
